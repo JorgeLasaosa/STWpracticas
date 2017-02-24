@@ -1,27 +1,82 @@
-var querystring = require("querystring");
+var fs = require("fs"),
+    formidable = require("formidable"),
+    memoDAO = require("./database/memoDAO.js");
 
-function start(response, postData) {
+function start(request, response) {
+
+  var body =  '<html>'+
+                '<head>'+
+                  '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
+                '</head>'+
+                '<body>'+
+                  '<form action="/upload" enctype="multipart/form-data" method="post">'+
+                    '<input type="file" name="upload" multiple="multiple">'+
+                    '<input type="submit" value="Upload file" />'+
+                  '</form>'+
+                '</body>'+
+              '</html>';
+  request.setEncoding("utf8");
+
   response.writeHead(200,{"Content-Type":"html"});
-  response.write("<html>" +
-                  "<body>" +
-                    "<form method='post' action='/upload'>" +
-                      "<textarea type='text' name='textareaData'></textarea>" +
-                      "<input type='submit' value='Submit'/>" +
-                    "</form>" +
-                  "</body>" +
-                 "</html>");
+  response.write(body);
   response.end();
 }
 
-function upload(response, postData) {
-  console.log("Request handler 'upload' was called");
+function upload(request, response) {
+  var form = new formidable.IncomingForm();
+  form.parse(request, function(error, fields, files) {
+    /* Possible error on Windows systems:
+     tried to rename to an already existing file */
 
-  var text = querystring.parse(postData).textareaData;
+    fs.rename(files.upload.path, "/tmp/test.png", function(error) {
+      if (error) {
+        fs.unlink("/tmp/test.png");
+        fs.rename(files.upload.path, "/tmp/test.png");
+      }
+    });
 
-  response.writeHead(200,{"Content-Type":"text/plain"});
-  response.write("You've sent: " + text);
+    var mDAO = new memoDAO();
+
+    mDAO.insert(fields.memoText, files.upload, fields.memoDate);
+
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write("received text: " + fields.memoText + "</br>");
+    response.write("received date: " + fields.memoDate + "</br>");
+    response.write("received image:<br/>");
+    response.write("<img src='/show' />");
+    response.end();
+  });
+}
+
+function show(request, response) {
+  response.writeHead(200, {"Content-Type": "image/png"});
+  fs.createReadStream("/tmp/test.png").pipe(response);
+}
+
+function setMemo(request, response) {
+  var body =  '<html>'+
+                '<head>'+
+                  '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
+                '</head>'+
+                '<body>'+
+                  '<form action="/upload" enctype="multipart/form-data" method="post">'+
+                    '<input type="file" name="upload" multiple="multiple">'+
+                    '</br>Tarea:</br>'+
+                    '<textarea name="memoText" rows="4" cols="50" ></textarea>' +
+                    '</br>Fecha límite</br>' +
+                    '<input type="date" name="memoDate">' +
+                    '<input type="submit" value="Upload Memo" />'+
+                  '</form>'+
+                '</body>'+
+              '</html>';
+  request.setEncoding("utf8");
+
+  response.writeHead(200,{"Content-Type":"html"});
+  response.write(body);
   response.end();
 }
 
 exports.start = start;
 exports.upload = upload;
+exports.show = show;
+exports.setMemo = setMemo;
