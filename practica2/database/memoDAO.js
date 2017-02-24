@@ -28,11 +28,4 @@ memoDAO.prototype.insert = function(text, file, deadline) {
   });
 }
 
-// var mDAO = new memoDAO(function(err, rows, fields) {
-//   if (err) throw err;
-//   console.log(rows);
-// });
-//
-// mDAO.insert("Jorge");
-
 module.exports = memoDAO;
