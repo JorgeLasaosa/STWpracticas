@@ -1,0 +1,23 @@
+{
+  "name": "practica2",
+  "version": "1.0.0",
+  "description": "STW practica 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JorgeLasaosa/STWpracticas.git"
+  },
+  "author": "JorgeLasaosa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JorgeLasaosa/STWpracticas/issues"
+  },
+  "homepage": "https://github.com/JorgeLasaosa/STWpracticas#readme",
+  "dependencies": {
+    "formidable": "^1.1.1"
+  }
+}
