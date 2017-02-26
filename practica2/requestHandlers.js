@@ -76,7 +76,43 @@ function setMemo(request, response) {
   response.end();
 }
 
+function showAllMemo(request, response) {
+
+  var mDAO = new memoDAO(function(err, rows, fields) {
+
+    var body = '<html>'+
+                  '<head>'+
+                    '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
+                  '</head>'+
+                  '<body>' +
+                    '<ul>';
+    for (let i of rows) {
+      body += '<li><form action="/showMemo" method="get">' +
+                i.nombre +
+                '<input type="hidden" name="id" value="'+i.id+'"/>' +
+                '<input type="submit" value="Show Memo"/>' +
+              '</form></li>';
+    }
+
+    body +=     '</ul>' +
+              '</body>' +
+            '</html>';
+
+    response.writeHead(200,{"Content-Type":"html"});
+    response.write(body);
+    response.end();
+  });
+
+  mDAO.getAllMemo();
+}
+
+function showMemo(request, response) {
+  response.end();
+}
+
 exports.start = start;
 exports.upload = upload;
 exports.show = show;
 exports.setMemo = setMemo;
+exports.showAllMemo = showAllMemo;
+exports.showMemo = showMemo;
