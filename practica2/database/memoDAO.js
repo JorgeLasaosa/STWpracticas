@@ -30,7 +30,7 @@ memoDAO.prototype.insert = function(text, file, deadline) {
 
 memoDAO.prototype.getAllMemo = function() {
 	pool.getConnection(function(err,conn) {
-		conn.query("select * from test", function(err, rows, fields) {
+		conn.query("select * from memo", function(err, rows, fields) {
 			conn.release();
 			if (typeof callback === 'function') {
 	      if (err) {
@@ -40,13 +40,29 @@ memoDAO.prototype.getAllMemo = function() {
 	        callback(null, rows, fields);
 	      }
 			}
-		})
+		});
+	});
+}
+
+memoDAO.prototype.findMemo = function(id) {
+	pool.getConnection(function(err,conn) {
+		conn.query("select * from memo where id=?", id, function(err, rows, fields) {
+			conn.release();
+			if (typeof callback === 'function') {
+	      if (err) {
+	        callback(err, null, null);
+	      }
+	      else {
+	        callback(null, rows, fields);
+	      }
+			}
+		});
 	});
 }
 
 memoDAO.prototype.deleteMemo = function(id) {
 	pool.getConnection(function(err,conn) {
-		conn.query("delete from test where id=?", id, function(err, rows, fields) {
+		conn.query("delete from memo where id=?", id, function(err, rows, fields) {
 			conn.release();
 			if (typeof callback === 'function') {
 	      if (err) {
@@ -56,7 +72,7 @@ memoDAO.prototype.deleteMemo = function(id) {
 	        callback(null, rows, fields);
 	      }
 			}
-		})
+		});
 	});
 }
 
