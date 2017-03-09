@@ -44,7 +44,6 @@ function upload(request, response) {
       response.write("<img src='/show' />");
       response.end();
     });
-
     mDAO.insert(fields.memoText, files.upload, fields.memoDate);
   });
 }
@@ -70,7 +69,6 @@ function setMemo(request, response) {
                   '</form>'+
                 '</body>'+
               '</html>';
-  request.setEncoding("utf8");
 
   response.writeHead(200,{"Content-Type":"html"});
   response.write(body);
@@ -115,16 +113,19 @@ function showMemo(request, response) {
     response.write("404 Not Found");
     response.end();
   } else {
-      var body =  '<html>'+
-                    '<head>'+
-                      '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
-                    '</head>'+
-                    '<body>' +
-                      '<p>' + rows[0].file + '</p>' +
-                    '</body>' +
-                  '</html>';
-      response.writeHead(200,{"Content-Type":"html"});
-      response.write(body);
+      // var body =  '<html>'+
+      //               '<head>'+
+      //                 '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
+      //               '</head>'+
+      //               '<body>' +
+      //                 '<p>' + rows[0].file + '</p>' +
+      //               '</body>' +
+      //             '</html>';
+      // response.writeHead(200,{"Content-Type":"html"});
+      // response.write(body);
+      response.writeHead(200, {"Content-Type": "image/png;base64"});
+      // response.write(rows[0].file.toString('binary'));
+      console.log(rows[0].file.toString('base64'));
       response.end();
     }
   });
