@@ -87,7 +87,8 @@ function showAllMemo(request, response) {
                     '<ul>';
     for (let i of rows) {
       body += '<li><form action="/showMemo" method="get">' +
-                i.text +
+                '<p>Text: ' + i.text + '</p>' +
+                '<p>Deadline: ' + i.deadline + '</p>' +
                 '<input type="hidden" name="id" value="'+i.id+'"/>' +
                 '<input type="submit" value="Show Memo"/>' +
                 '<input type="submit" formaction="/deleteMemo" value="Delete Memo"/>' +
@@ -113,19 +114,17 @@ function showMemo(request, response) {
     response.write("404 Not Found");
     response.end();
   } else {
-      // var body =  '<html>'+
-      //               '<head>'+
-      //                 '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
-      //               '</head>'+
-      //               '<body>' +
-      //                 '<p>' + rows[0].file + '</p>' +
-      //               '</body>' +
-      //             '</html>';
-      // response.writeHead(200,{"Content-Type":"html"});
-      // response.write(body);
-      response.writeHead(200, {"Content-Type": "image/png;base64"});
-      // response.write(rows[0].file.toString('binary'));
-      console.log(rows[0].file.toString('base64'));
+      var body =  '<html>'+
+                    '<head>'+
+                      '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
+                    '</head>'+
+                    '<body>' +
+                      '<p>' + rows[0].text + '</p> </br>' +
+                      '<p>Deadline: ' + rows[0].deadline + '</p>' +
+                    '</body>' +
+                  '</html>';
+      response.writeHead(200,{"Content-Type":"html"});
+      response.write(body);
       response.end();
     }
   });
@@ -147,7 +146,7 @@ function deleteMemo(request, response) {
                       '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'+
                     '</head>'+
                     '<body>' +
-                      '<p> Deleted Memo</p>' +
+                      '<p>Deleted Memo</p>' +
                     '</body>' +
                   '</html>';
       response.writeHead(200,{"Content-Type":"html"});
