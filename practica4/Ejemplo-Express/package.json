@@ -1,0 +1,11 @@
+{
+  "name": "API sencilla",
+  "version": "1.0.0",
+  "description": "Ejemplo de un servidor Node.js con un API de servicios",
+  "author": "Javier Fabra",
+  "license": "UZ",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2"
+  }
+}

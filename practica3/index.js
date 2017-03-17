@@ -1,15 +1,25 @@
-var server = require("./server.js");
-    router = require("./router.js");
-    requestHandlers = require("./requestHandlers.js");
+'use strict';
 
-var handle = {};
-handle["/"] = requestHandlers.showAllMemo;
-handle["/start"] = requestHandlers.start;
-handle["/upload"] = requestHandlers.upload;
-handle["/show"] = requestHandlers.show;
-handle["/setMemo"] = requestHandlers.setMemo;
-handle["/showAllMemo"] = requestHandlers.showAllMemo;
-handle["/showMemo"] = requestHandlers.showMemo;
-handle["/deleteMemo"] = requestHandlers.deleteMemo;
+var MongoClient = require('mongodb').MongoClient;
 
-server.start(router.route, handle);
+MongoClient.connect(
+ 'mongodb://127.0.0.1:27017/accounting',
+ function (err, connection) {
+    var collection = connection.collection('customers');
+
+    var doInsert = function (i) {
+       if (i < 200000) {
+          var value = Math.floor(Math.random() * 10);
+          collection.insert(
+             {'n': '#' + i, 'v': value},
+             function (err, count) {
+                doInsert(i + 1);
+          });
+       } else {
+          connection.close();
+       }
+    };
+
+    doInsert(0);
+
+});
